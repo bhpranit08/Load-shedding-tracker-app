@@ -12,7 +12,7 @@ const NavbarComponent = () => {
     return (
         <Navbar fluid rounded>
             <NavbarBrand as={Link} to="/" onClick={() => setActive('home')}>
-                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Loadshedding Tracker App</span>
+                <span className="self-center whitespace-nowrap text-xl font-semibold text-black">Loadshedding Tracker App</span>
             </NavbarBrand>
             <NavbarToggle />
             <NavbarCollapse>
