@@ -8,21 +8,6 @@ const NavbarComponent = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     useEffect(() => {
-        const data = localStorage.getItem('jwt')
-        
-        const checkUsers = async() => {
-            if (data) {
-                const response = await supabase.auth.getUser(data)
-                if (response.error !== null) {
-                    setIsLoggedIn(true)
-                }
-            }
-        }
-
-        checkUsers()
-    }, [])
-
-    useEffect(() => {
         const current = window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', '')
         setActive(current || 'home')
     }, [])
@@ -56,16 +41,12 @@ const NavbarComponent = () => {
                 <NavbarLink as={Link} to="/map" onClick={() => setActive('map')} className={linkClasses('map')}>
                     Map
                 </NavbarLink>
-                {isLoggedIn ? (
-                    <>
-                        <NavbarLink as={Link} to="/register" onClick={() => setActive('register')} className={linkClasses('register')}>
-                            Register
-                        </NavbarLink>
-                        <NavbarLink as={Link} to="/login" onClick={() => setActive('login')} className={linkClasses('login')}>
-                            Login
-                        </NavbarLink>
-                    </>
-                ) : null}
+                <NavbarLink as={Link} to="/register" onClick={() => setActive('register')} className={linkClasses('register')}>
+                    Register
+                </NavbarLink>
+                <NavbarLink as={Link} to="/login" onClick={() => setActive('login')} className={linkClasses('login')}>
+                    Login
+                </NavbarLink>
             </NavbarCollapse>
         </Navbar>
     )
