@@ -1,29 +1,24 @@
 import React, { useState } from 'react'
-import { supabase } from '../supabaseClient'
-import { Alert, FloatingLabel, Button } from 'flowbite-react'
+import { FloatingLabel, Button } from 'flowbite-react'
 import { Link } from 'react-router-dom'
+import { useRegister } from '../hooks/useUsers'
 
 const Register = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [message, setMessage] = useState(null)
-    const [error, setError] = useState(null)
+    const { loading, register } = useRegister()
+
+    const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phoneNo: '',
+        username: ''
+    })
 
     const handleRegister = async (e) => {
         e.preventDefault()
-        setError(null)
-        setMessage(null)
-        setLoading(true)
-
-        const { error } = await supabase.auth.signUp({ email, password })
-
-        if (error) {
-            setError(error.message)
-        } else {
-            setMessage('Registration successful. Confirm via the email we just sent.')
-        }
-        setLoading(false)
+        await register(user)
     }
 
     return (
@@ -33,15 +28,49 @@ const Register = () => {
                     <h2 className="text-2xl font-semibold text-white">Create an account</h2>
                     <p className="text-sm text-slate-400">Deploy outage intelligence with a single profile.</p>
                     <div className="mt-6 space-y-4">
-                        {error && <Alert color="failure">{error}</Alert>}
-                        {message && <Alert color="success">{message}</Alert>}
+                        <FloatingLabel
+                            variant="standard"
+                            color="default"
+                            label="First Name"
+                            type="text"
+                            value={user.firstName}
+                            onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                            disabled={loading}
+                        />
+                        <FloatingLabel
+                            variant="standard"
+                            color="default"
+                            label="Last Name"
+                            type="text"
+                            value={user.lastName}
+                            onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                            disabled={loading}
+                        />
+                        <FloatingLabel
+                            variant="standard"
+                            color="default"
+                            label="Username"
+                            type="text"
+                            value={user.username}
+                            onChange={(e) => setUser({ ...user, username: e.target.value })}
+                            disabled={loading}
+                        />
+                        <FloatingLabel
+                            variant="standard"
+                            color="default"
+                            label="Phone NO."
+                            type="text"
+                            value={user.phoneNo}
+                            onChange={(e) => setUser({ ...user, phoneNo: e.target.value })}
+                            disabled={loading}
+                        />
                         <FloatingLabel
                             variant="standard"
                             color="default"
                             label="Your email"
                             type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={user.email}
+                            onChange={(e) => setUser({ ...user, email: e.target.value })}
                             disabled={loading}
                         />
                         <FloatingLabel
@@ -49,8 +78,17 @@ const Register = () => {
                             color="default"
                             label="Password"
                             type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={user.password}
+                            onChange={(e) => setUser({ ...user, password: e.target.value })}
+                            disabled={loading}
+                        />
+                        <FloatingLabel
+                            variant="standard"
+                            color="default"
+                            label="Confirm Password"
+                            type="password"
+                            value={user.confirmPassword}
+                            onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
                             disabled={loading}
                         />
                         <Button

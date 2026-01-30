@@ -4,6 +4,7 @@ import Map from './pages/Map'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NavbarComponent from './components/NavbarComponent'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
+          <Toaster toastOptions={{ className: '', style: { width: '1020px' } }} />
         </main>
       </div>
     </div>

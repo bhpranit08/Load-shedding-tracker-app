@@ -8,7 +8,7 @@ export const useAuthContext = () => {
 
 export const AuthContextProvider = ({ children }) => {
     const [authUser, setAuthUser] = useState(
-        JSON.parse(localStorage.getItem('user'))
+        JSON.parse(localStorage.getItem('user-load-shedding'))
     )
 
     useEffect(() => {
@@ -21,15 +21,15 @@ export const AuthContextProvider = ({ children }) => {
                     credentials: 'include'
                 })
                 if(!response.ok) {
-                    localStorage.removeItem("user")
+                    localStorage.removeItem("user-load-shedding")
                     if (isMounted) setAuthUser(null)
                 } else {
                     const data = await response.json()
-                    localStorage.setItem('user', JSON.stringify(data))
+                    localStorage.setItem('user-load-shedding', JSON.stringify(data))
                     if (isMounted) setAuthUser(data)
                 }
             } catch (err) {
-                localStorage.removeItem('user')
+                localStorage.removeItem('user-load-shedding')
                 if (isMounted) setAuthUser(null)
             }
         }

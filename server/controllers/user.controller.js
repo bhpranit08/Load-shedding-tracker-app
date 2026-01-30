@@ -4,48 +4,40 @@ import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/generateToken.js"
 
 export const register = asyncHandler( async (req, res, next) => {
-    console.log('hello')
-    const { username, firstName, lastName, email, phoneNo, password, confirmPassword } = req.body.user
+    const { name, email, password, confirmPassword, xCoordinate, yCoordinate } = req.body.user
 
-    if(firstName.length < 3) {
-        return res.status(400).json({ error: "First Name too short"})
-    }
-
-    if(lastName.length < 3) {
-        return res.status(400).json({ error: "Last Name too short"})
+    if(name.length < 3) {
+        return res.status(400).json({ error: "Name too short"})
     }
 
     if (confirmPassword !== password ) {
         return res.status(400).json({ error: "Passwords don't match"})
     }
 
-    const userExists = await User.findOne({ username, phoneNo, email })
+    const userExists = await User.findOne({ email })
 
     if(userExists) {
-        return res.status(400).json({ message: 'Email/phone/username already taken' })
+        return res.status(400).json({ message: 'Email already taken' })
     }
 
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const user = new User({
-        username,
+        name,
         email,
-        phoneNo,
         password: hashedPassword,
-        firstName,
-        lastName,
-        role: 'admin',
-        isCreating: false,
+        homeLocation: {
+            coordinates: [xCoordinate, yCoordinate]
+        }
     })
 
     await user.save()
 
     res.status(201).json({
         _id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email,
-        role: user.role,
     })
 })
 
@@ -64,9 +56,8 @@ export const login = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
         _id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email,
-        role: user.role,
     })
 })
 
@@ -79,12 +70,11 @@ export const me = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
         _id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email,
-        role: user.role,
-        company: user.company,
-        permissions: user.permissions,
-        avatar: user.profile?.avatar,
-        plan: user.plan
+        homeLocation: user.homeLocation,
+        credibilityScore: user.credibilityScore,
+        totalReports: user.profile?.totalReports,
+        accurateReports: user.accurateReports
     })
 })
