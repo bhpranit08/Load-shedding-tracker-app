@@ -5,6 +5,7 @@ import connectToMongoDb from "./db/connectToMongoDb.js"
 import cors from 'cors'
 
 import userRoutes from "./routes/user.routes.js"
+import outageRoutes from "./routes/outage.routes.js"
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/user", userRoutes)
+app.use("/api/outage", outageRoutes)
 
 app.listen(PORT, async() => {
     await connectToMongoDb()

@@ -6,12 +6,16 @@ import generateTokenAndSetCookie from "../utils/generateToken.js"
 export const register = asyncHandler( async (req, res, next) => {
     const { name, email, password, confirmPassword, xCoordinate, yCoordinate } = req.body.user
 
+    if (xCoordinate < 80.0 || xCoordinate > 88.2 || yCoordinate < 26.3 || yCoordinate > 30.4) {
+        return res.status(400).json({ message: 'Location must be within Nepal' });
+    }
+
     if(name.length < 3) {
-        return res.status(400).json({ error: "Name too short"})
+        return res.status(400).json({ message: "Name too short"})
     }
 
     if (confirmPassword !== password ) {
-        return res.status(400).json({ error: "Passwords don't match"})
+        return res.status(400).json({ message: "Passwords don't match"})
     }
 
     const userExists = await User.findOne({ email })
@@ -63,7 +67,7 @@ export const login = asyncHandler(async (req, res, next) => {
 
 export const me = asyncHandler(async (req, res, next) => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' })
+        return res.status(401).json({ message: 'Unauthorized' })
     }
     
     const user = req.user

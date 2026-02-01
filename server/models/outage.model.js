@@ -25,7 +25,18 @@ const OutageReportSchema = new Schema({
 
     reportedAt: { type: Date, default: Date.now },
 
+    resolutionConfirmations: [{
+        userId: { type: Schema.Types.ObjectId, ref: "User" },
+        location: {
+            type: { type: String, default: "Point" },
+            coordinates: [Number]
+        },
+        timestamp: { type: Date, default: Date.now }
+    }],
+
     resolvedAt: { type: Date },
+
+    outageDuration: { type: Number },
 
     description: { type: String, maxLength: 200 }
 }, { timestamps: true })
@@ -34,7 +45,7 @@ OutageReportSchema.index({ location: '2dsphere' })
 OutageReportSchema.index({ reportedAt: -1 })
 OutageReportSchema.index({ status: 1 })
 
-outageReportSchema.methods.updateStatus = function() {
+OutageReportSchema.methods.updateStatus = function() {
     if (this.downvotes >= 3 && this.downvotes > this.upvotes) {
         this.status = 'false'
     } else if (this.upvotes >= 4) {
