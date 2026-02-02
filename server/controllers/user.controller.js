@@ -82,3 +82,15 @@ export const me = asyncHandler(async (req, res, next) => {
         accurateReports: user.accurateReports
     })
 })
+
+export const logout = asyncHandler( async (req, res, next) => {
+    res.cookie("jwt", "", {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        expires: new Date(0),
+        maxAge: 0,
+    })
+    
+    res.status(201).json({ message: "Logged out successfully" })
+})
