@@ -4,7 +4,7 @@ import protectRoute from "../middlewares/protectRoute.js"
 
 const router = express.Router()
 
-router.get("/nearby", get_reports )
+router.get("/nearby", protectRoute, get_reports )
 
 router.post('/', protectRoute, add_report)
 router.post("/:id/verify", protectRoute, verify_report)

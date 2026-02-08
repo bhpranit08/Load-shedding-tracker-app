@@ -28,7 +28,9 @@ export const get_reports = asyncHandler(async (req, res, next) => {
     .sort({ reportedAt: -1 })
     .limit(100)
 
-    return res.status(200).json({ reports })
+    const ownReports = await OutageReport.find({ userId: req.user._id }).populate('userId', 'name').sort({ reportedAt: -1 })
+
+    return res.status(200).json({ reports, ownReports })
 })
 
 export const add_report = asyncHandler(async (req, res, next) => {
@@ -50,7 +52,7 @@ export const add_report = asyncHandler(async (req, res, next) => {
     const recentReport = await OutageReport.findOne({ userId, reportedAt: { $gte: new Date(Date.now() - 15 * 60 * 1000) } });
 
     if (recentReport) {
-        return res.status(400).json({ error: 'Wait 15 minutes before next report' })
+        return res.status(400).json({ message: 'Wait 15 minutes before next report' })
     }
 
     if (xCoordinate < 80.0 || xCoordinate > 88.2 || yCoordinate < 26.3 || yCoordinate > 30.4) {
@@ -103,7 +105,7 @@ export const verify_report = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ message: 'Cannot verify a resolved report'})
     }
 
-    if (report.userId.toString() === userId) {
+    if (report.userId.toString() === userId.toString()) {
         return res.status(400).json({ message: "User can't verify their own report"})
     }
 
@@ -132,7 +134,7 @@ export const verify_report = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ message: 'You must be within 1 KM of the reported location to verify it'})
     }
 
-    const existingVerification = report.verifications.find( v => v.userId.toString() === userId )
+    const existingVerification = report.verifications.find( v => v.userId.toString() === userId.toString() )
 
     if (existingVerification) {
         existingVerification.type = type

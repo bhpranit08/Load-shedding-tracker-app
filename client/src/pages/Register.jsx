@@ -29,7 +29,8 @@ const Register = () => {
         name: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        area: ''
     })
     const [mapPosition, setMapPosition] = useState(null)
     const [showMap, setShowMap] = useState(false)
@@ -108,7 +109,8 @@ const Register = () => {
             password: formData.password,
             confirmPassword: formData.confirmPassword,
             xCoordinate: mapPosition[1],
-            yCoordinate: mapPosition[0]
+            yCoordinate: mapPosition[0],
+            area: formData.area
         }
 
         await register(user)
@@ -247,6 +249,21 @@ const Register = () => {
                                 <span>Location set: {mapPosition[0].toFixed(4)}, {mapPosition[1].toFixed(4)}</span>
                             </div>
                         )}
+
+                        <div className="form-control mt-2">
+                            <label className="label">
+                                <span className="label-text">Area Name</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="area"
+                                placeholder="Eg: Baneshow, Kathmandu"
+                                className="input input-bordered w-full"
+                                value={formData.area}
+                                onChange={handleChange}
+                                disabled={loading}
+                            />
+                        </div>
 
                         <div className="form-control mt-6">
                             <button

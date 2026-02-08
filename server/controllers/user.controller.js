@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/generateToken.js"
 
 export const register = asyncHandler( async (req, res, next) => {
-    const { name, email, password, confirmPassword, xCoordinate, yCoordinate } = req.body.user
+    const { name, email, password, confirmPassword, xCoordinate, yCoordinate, area } = req.body.user
 
     if (xCoordinate < 80.0 || xCoordinate > 88.2 || yCoordinate < 26.3 || yCoordinate > 30.4) {
         return res.status(400).json({ message: 'Location must be within Nepal' });
@@ -16,6 +16,10 @@ export const register = asyncHandler( async (req, res, next) => {
 
     if (confirmPassword !== password ) {
         return res.status(400).json({ message: "Passwords don't match"})
+    }
+
+    if(!area) {
+        return res.status(400).json({ message: "Area name is required"})
     }
 
     const userExists = await User.findOne({ email })
@@ -32,7 +36,8 @@ export const register = asyncHandler( async (req, res, next) => {
         email,
         password: hashedPassword,
         homeLocation: {
-            coordinates: [xCoordinate, yCoordinate]
+            coordinates: [xCoordinate, yCoordinate],
+            area
         }
     })
 
@@ -42,6 +47,10 @@ export const register = asyncHandler( async (req, res, next) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        homeLocation: user.homeLocation,
+        credibilityScore: user.credibilityScore,
+        totalReports: user?.totalReports,
+        accurateReports: user.accurateReports
     })
 })
 
@@ -62,6 +71,10 @@ export const login = asyncHandler(async (req, res, next) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        homeLocation: user.homeLocation,
+        credibilityScore: user.credibilityScore,
+        totalReports: user?.totalReports,
+        accurateReports: user.accurateReports
     })
 })
 
@@ -78,7 +91,7 @@ export const me = asyncHandler(async (req, res, next) => {
         email: user.email,
         homeLocation: user.homeLocation,
         credibilityScore: user.credibilityScore,
-        totalReports: user.profile?.totalReports,
+        totalReports: user?.totalReports,
         accurateReports: user.accurateReports
     })
 })

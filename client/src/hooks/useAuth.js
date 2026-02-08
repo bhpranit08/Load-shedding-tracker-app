@@ -26,8 +26,6 @@ const useLogin = () => {
                 body: JSON.stringify({user})
             })
 
-            console.log(response)
-
             const data = await response.json()
 
             if (response.status !== 201) {
