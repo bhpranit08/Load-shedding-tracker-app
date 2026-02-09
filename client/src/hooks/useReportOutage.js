@@ -14,8 +14,9 @@ const useGetOutages = () => {
     const getOutages = async () => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/outage/nearby?xCoordinate=${authUser?.homeLocation?.coordinates[0]}&yCoordinate=${authUser?.homeLocation?.coordinates[1]}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/nearby?xCoordinate=${authUser?.homeLocation?.coordinates[0]}&yCoordinate=${authUser?.homeLocation?.coordinates[1]}`, {
                 method: "GET",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -52,8 +53,9 @@ const useReportOutage = (getOutages) => {
         setLoading(true)
 
         try {
-            const response = await fetch(`/api/outage`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -86,8 +88,9 @@ const useVerifyOutage = (getOutages) => {
     const verifyOutage = async (outage) => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/outage/${outage._id}/verify`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/${outage._id}/verify`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -120,8 +123,9 @@ const useResolveOutage = (getOutages) => {
     const resolveOutage = async (outage) => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/outage/${outage._id}/resolve`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/${outage._id}/resolve`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },

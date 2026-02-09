@@ -18,8 +18,9 @@ const useLogin = () => {
 
         try {
 
-            const response = await fetch(`/api/user/login`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -59,8 +60,9 @@ const useRegister = () => {
         setLoading(true)
 
         try {
-            const response = await fetch(`/api/user/register`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/register`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -94,7 +96,7 @@ const useLogout = () => {
     const logout = async() => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/user/logout`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/logout`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

@@ -16,7 +16,7 @@ export const AuthContextProvider = ({ children }) => {
         const checkSession = async () => {
             if (!authUser) return
             try {
-                const res = await fetch('/api/user/me', { credentials: 'include' })
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/me`, { credentials: 'include' })
                 if (!res.ok) {
                     localStorage.removeItem('user')
                     if (isMounted) setAuthUser(null)
