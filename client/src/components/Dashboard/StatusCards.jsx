@@ -216,7 +216,7 @@ const StatusCards = () => {
                                         <button
                                             type='button'
                                             className='btn btn-sm btn-ghost gap-1.5'
-                                            onClick={() => navigate('/map', { state: { selectedOutage: outage._id } })}
+                                            onClick={() => navigate('/home/map', { state: { selectedOutage: outage._id } })}
                                         >
                                             <MapPinned className='h-4 w-4' />
                                             View on Map

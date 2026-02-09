@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useGetOutages } from "../hooks/useReportOutage"
+import { useLocation } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -37,6 +38,7 @@ const Map = () => {
     const { allReports } = useGetOutages()
     const [from, setFrom] = useState('')
     const [to, setTo] = useState('')
+    const location = useLocation()
 
     const outages = useMemo(() => {
         const reports = allReports ?? []
@@ -50,6 +52,20 @@ const Map = () => {
             return true
         })
     }, [from, to, allReports])
+
+    // If we navigated here with a selected outage ID in route state,
+    // automatically select that outage once reports are loaded.
+    useEffect(() => {
+        const selectedOutageIdFromNav =
+            location.state?.selectedOutageId ?? location.state?.selectedOutage
+
+        if (!selectedOutageIdFromNav || !outages || outages.length === 0) return
+
+        const match = outages.find((report) => report._id === selectedOutageIdFromNav)
+        if (match) {
+            setSelectedOutage(match)
+        }
+    }, [location.state, outages])
 
     const kathmanduCenter = [27.7172, 85.3240]
 
