@@ -101,11 +101,11 @@ const OwnReports = () => {
             <div className='flex flex-col items-center w-full'>
                 <h2 className='text-2xl font-bold text-center'>Outages reported by you</h2>
             </div>
-            <div className='space-y-3 grid grid-cols-1 md:grid-cols-2 gap-2'>
+            <div className='space-y-3 grid grid-cols-1 md:grid-cols-2 gap-2 mt-3'>
                 {ownOutages.map((outage) => (
                     <div
                         key={outage._id}
-                        className='card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow'
+                        className='card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow h-full'
                     >
                         <div className='card-body'>
                             {(() => {

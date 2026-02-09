@@ -13,6 +13,7 @@ const UserSchema = new Schema({
     credibilityScore: { type: Number, default: 50, min: 0, max: 100 },
     totalReports: { type: Number, default: 0 },
     accurateReports: { type: Number, default: 0 },
+    profilePic: { type: String }
 }, { timestamps: true })
 
 UserSchema.index({ homeLocation: '2dsphere' });

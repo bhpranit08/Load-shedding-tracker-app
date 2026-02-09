@@ -69,11 +69,11 @@ const TopCards = () => {
             </div>
 
             <div className='stat border border-primary rounded-lg'>
-                <div className='stat-figure text-info'>
+                <div className='stat-figure text-primary'>
                     <ClipboardList className='h-12 w-12' />
                 </div>
                 <div className='stat-title text-base-content/70'>Your Reports</div>
-                <div className='stat-value text-info'>{totalUserReports}</div>
+                <div className='stat-value text-primary'>{totalUserReports}</div>
                 <div className='stat-desc'>Total reported</div>
             </div>
         </div>

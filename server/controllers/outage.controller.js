@@ -29,8 +29,9 @@ export const get_reports = asyncHandler(async (req, res, next) => {
     .limit(100)
 
     const ownReports = await OutageReport.find({ userId: req.user._id }).populate('userId', 'name').sort({ reportedAt: -1 })
+    const allReports = await OutageReport.find().populate("userId", "name").sort({ reportedAt: -1 })
 
-    return res.status(200).json({ reports, ownReports })
+    return res.status(200).json({ reports, ownReports, allReports })
 })
 
 export const add_report = asyncHandler(async (req, res, next) => {

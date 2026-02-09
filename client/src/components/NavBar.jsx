@@ -4,8 +4,13 @@ import { useLogout } from "../hooks/useAuth"
 
 import { Link } from 'react-router-dom'
 
+import ThemeChanger from "../utils/ThemeChanger"
+
+import { useAuthContext } from "../context/AuthContext"
+
 const NavBar = () => {
     const { logout, loading } = useLogout()
+    const { authUser } = useAuthContext()
 
     return (
         <div className="navbar bg-base-200 shadow-sm">
@@ -48,7 +53,24 @@ const NavBar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <button className={`btn btn-outline btn-error ${ loading ? 'btn-disabled' : 'btn-outline btn-error' }`} onClick={() => logout()}>{loading ? <span className='loading loading-spinner'></span> : 'Logout'}</button>
+                <ThemeChanger />
+                <div className="dropdown dropdown-end">
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                        <div className="w-10 rounded-full">
+                            <img
+                                alt="Tailwind CSS Navbar component"
+                                src={authUser.profilePic} />
+                        </div>
+                    </div>
+                    <ul
+                        tabIndex="-1"
+                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                        <li><a>{authUser.name}</a></li>
+                        <li>
+                            <button className={`btn btn-outline btn-sm btn-error ${ loading ? 'btn-disabled' : 'btn-outline btn-error' }`} onClick={() => logout()}>{loading ? <span className='loading loading-spinner'></span> : 'Logout'}</button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     )

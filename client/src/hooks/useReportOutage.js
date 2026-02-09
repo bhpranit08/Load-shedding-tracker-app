@@ -7,6 +7,7 @@ const useGetOutages = () => {
     const [loading, setLoading] = useState(false)
     const [outages, setOutages] = useState()
     const [ownReports, setOwnReports] = useState()
+    const [allReports, setAllReports] = useState()
 
     const { authUser } = useAuthContext()
 
@@ -29,6 +30,7 @@ const useGetOutages = () => {
 
             setOutages(data.reports)
             setOwnReports(data.ownReports)
+            setAllReports(data.allReports)
         } catch (err) {
             console.error(err.message)
         } finally {
@@ -40,7 +42,7 @@ const useGetOutages = () => {
         getOutages()
     }, [])
 
-    return { loading, outages, getOutages, ownReports }
+    return { loading, outages, getOutages, ownReports, allReports }
 }
 
 const useReportOutage = (getOutages) => {

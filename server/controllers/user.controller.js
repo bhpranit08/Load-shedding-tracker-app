@@ -31,6 +31,15 @@ export const register = asyncHandler( async (req, res, next) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '';
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     const user = new User({
         name,
         email,
@@ -38,7 +47,8 @@ export const register = asyncHandler( async (req, res, next) => {
         homeLocation: {
             coordinates: [xCoordinate, yCoordinate],
             area
-        }
+        },
+        profilePic: `https://ui-avatars.com/api/?name=${name}&background=${getRandomColor()}&color=fff`
     })
 
     await user.save()
@@ -50,7 +60,8 @@ export const register = asyncHandler( async (req, res, next) => {
         homeLocation: user.homeLocation,
         credibilityScore: user.credibilityScore,
         totalReports: user?.totalReports,
-        accurateReports: user.accurateReports
+        accurateReports: user.accurateReports,
+        profilePic: user.profilePic
     })
 })
 
@@ -74,7 +85,8 @@ export const login = asyncHandler(async (req, res, next) => {
         homeLocation: user.homeLocation,
         credibilityScore: user.credibilityScore,
         totalReports: user?.totalReports,
-        accurateReports: user.accurateReports
+        accurateReports: user.accurateReports,
+        profilePic: user.profilePic
     })
 })
 
@@ -92,7 +104,8 @@ export const me = asyncHandler(async (req, res, next) => {
         homeLocation: user.homeLocation,
         credibilityScore: user.credibilityScore,
         totalReports: user?.totalReports,
-        accurateReports: user.accurateReports
+        accurateReports: user.accurateReports,
+        profilePic: user.profilePic
     })
 })
 

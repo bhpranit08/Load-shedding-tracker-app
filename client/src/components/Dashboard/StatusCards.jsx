@@ -140,7 +140,7 @@ const StatusCards = () => {
                 {outages.map((outage) => (
                     <div
                         key={outage._id}
-                        className='card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow'
+                        className='card bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow h-full'
                     >
                         <div className='card-body'>
                             {(() => {
