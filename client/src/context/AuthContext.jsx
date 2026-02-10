@@ -1,4 +1,4 @@
-import { useContext, useState, createContext, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from 'react'
 
 export const AuthContext = createContext()
 
@@ -7,36 +7,44 @@ export const useAuthContext = () => {
 }
 
 export const AuthContextProvider = ({ children }) => {
-    const [authUser, setAuthUser] = useState(
-        JSON.parse(localStorage.getItem('user'))
-    )
+    const [authUser, setAuthUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        let isMounted = true
-        const checkSession = async () => {
-            if (!authUser) return
-            try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/me`, { credentials: 'include' })
-                if (!res.ok) {
-                    localStorage.removeItem('user')
-                    if (isMounted) setAuthUser(null)
-                } else {
-                    const data = await res.json()
-                    localStorage.setItem('user', JSON.stringify(data))
-                    if (isMounted) setAuthUser(data)
-                }
-            } catch (e) {
-                localStorage.removeItem('user')
-                if (isMounted) setAuthUser(null)
+        // Load user from localStorage on mount
+        try {
+            const userStr = localStorage.getItem('user')
+            if (userStr) {
+                const user = JSON.parse(userStr)
+                setAuthUser(user)
             }
+        } catch (error) {
+            console.error('Error loading user from localStorage:', error)
+            localStorage.removeItem('user')
+        } finally {
+            setLoading(false)
         }
-        checkSession()
-        return () => { isMounted = false }
     }, [])
 
+    // Wrapper to also save to localStorage when setting auth user
+    const updateAuthUser = (user) => {
+        setAuthUser(user)
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user))
+        } else {
+            localStorage.removeItem('user')
+        }
+    }
+
+    const value = {
+        authUser,
+        setAuthUser: updateAuthUser,
+        loading
+    }
+
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser }}>
-            {children}
+        <AuthContext.Provider value={value}>
+            {!loading && children}
         </AuthContext.Provider>
     )
 }

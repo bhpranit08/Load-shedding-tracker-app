@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler"
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/generateToken.js"
+import jwt from "jsonwebtoken"
 
 export const register = asyncHandler( async (req, res, next) => {
     const { name, email, password, confirmPassword, xCoordinate, yCoordinate, area } = req.body.user
@@ -76,7 +77,11 @@ export const login = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ message: 'Invalid username or password'})
     }
 
-    generateTokenAndSetCookie(user._id, res)
+    // generateTokenAndSetCookie(user._id, res)
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d',
+    })
 
     res.status(201).json({
         _id: user._id,
@@ -86,7 +91,8 @@ export const login = asyncHandler(async (req, res, next) => {
         credibilityScore: user.credibilityScore,
         totalReports: user?.totalReports,
         accurateReports: user.accurateReports,
-        profilePic: user.profilePic
+        profilePic: user.profilePic,
+        token
     })
 })
 

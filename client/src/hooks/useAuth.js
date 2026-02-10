@@ -7,7 +7,7 @@ const useLogin = () => {
     const [loading, setLoading] = useState(false)
     const { setAuthUser } = useAuthContext()
     const navigate = useNavigate()
-    
+
     const login = async (user) => {
         if (!user.email || !user.password) {
             toast.error('Please enter all the fields')
@@ -15,12 +15,10 @@ const useLogin = () => {
         }
 
         setLoading(true)
-
         try {
-
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
                 method: "POST",
-                credentials: 'include',
+                // Remove credentials: 'include' - not needed anymore
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -34,10 +32,12 @@ const useLogin = () => {
                 return
             }
 
+            // Data now includes the token from backend
+            // Save to localStorage and set in context
             localStorage.setItem("user", JSON.stringify(data))
             setAuthUser(data)
+            
             navigate("/home")
-
             toast.success('Logged In Successfully')
 
         } catch (error) {
@@ -52,17 +52,14 @@ const useLogin = () => {
 
 const useRegister = () => {
     const [loading, setLoading] = useState(false)
-
     const navigate = useNavigate()
 
     const register = async (user) => {
-
         setLoading(true)
-
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/register`, {
                 method: "POST",
-                credentials: 'include',
+                // Remove credentials: 'include'
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -77,8 +74,8 @@ const useRegister = () => {
             }
 
             toast.success("Account created successfully: Please login")
-
             navigate("/login")
+
         } catch (err) {
             toast.error(err.message)
         } finally {
@@ -86,7 +83,7 @@ const useRegister = () => {
         }
     }
 
-    return {  loading, register }
+    return { loading, register }
 }
 
 const useLogout = () => {
@@ -98,7 +95,7 @@ const useLogout = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/logout`, {
                 method: 'POST',
-                credentials: 'include',
+                // Remove credentials: 'include'
                 headers: {
                     "Content-type": "application/json"
                 },
@@ -109,8 +106,10 @@ const useLogout = () => {
                 return
             }
 
+            // Clear user from localStorage and context
             localStorage.removeItem("user")
             setAuthUser(null)
+
         } catch (err) {
             toast.error(err.message)
         } finally {

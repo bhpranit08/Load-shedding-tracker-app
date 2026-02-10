@@ -1,7 +1,17 @@
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-
 import { useAuthContext } from "../context/AuthContext";
+
+// Helper function to get auth headers
+const getAuthHeaders = () => {
+    const userStr = localStorage.getItem('user')
+    const user = userStr ? JSON.parse(userStr) : null
+    
+    return {
+        "Content-Type": "application/json",
+        ...(user?.token && { "Authorization": `Bearer ${user.token}` })
+    }
+}
 
 const useGetOutages = () => {
     const [loading, setLoading] = useState(false)
@@ -16,10 +26,9 @@ const useGetOutages = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/nearby?xCoordinate=${authUser?.homeLocation?.coordinates[0]}&yCoordinate=${authUser?.homeLocation?.coordinates[1]}`, {
                 method: "GET",
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                // Remove credentials: 'include'
+                // Add Authorization header
+                headers: getAuthHeaders(),
             })
 
             const data = await response.json()
@@ -40,8 +49,10 @@ const useGetOutages = () => {
     }
 
     useEffect(() => {
-        getOutages()
-    }, [])
+        if (authUser) {
+            getOutages()
+        }
+    }, [authUser])
 
     return { loading, outages, getOutages, ownReports, allReports }
 }
@@ -55,10 +66,9 @@ const useReportOutage = (getOutages) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage`, {
                 method: "POST",
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                // Remove credentials: 'include'
+                // Add Authorization header
+                headers: getAuthHeaders(),
                 body: JSON.stringify({outage})
             })
 
@@ -90,10 +100,9 @@ const useVerifyOutage = (getOutages) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/${outage._id}/verify`, {
                 method: "POST",
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                // Remove credentials: 'include'
+                // Add Authorization header
+                headers: getAuthHeaders(),
                 body: JSON.stringify({outage})
             })
 
@@ -125,10 +134,9 @@ const useResolveOutage = (getOutages) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/outage/${outage._id}/resolve`, {
                 method: "POST",
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                // Remove credentials: 'include'
+                // Add Authorization header
+                headers: getAuthHeaders(),
                 body: JSON.stringify({outage})
             })
 
