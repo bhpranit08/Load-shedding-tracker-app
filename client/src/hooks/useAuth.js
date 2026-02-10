@@ -18,7 +18,6 @@ const useLogin = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
                 method: "POST",
-                // Remove credentials: 'include' - not needed anymore
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -32,8 +31,6 @@ const useLogin = () => {
                 return
             }
 
-            // Data now includes the token from backend
-            // Save to localStorage and set in context
             localStorage.setItem("user", JSON.stringify(data))
             setAuthUser(data)
             
@@ -59,7 +56,6 @@ const useRegister = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/register`, {
                 method: "POST",
-                // Remove credentials: 'include'
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -95,7 +91,6 @@ const useLogout = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/logout`, {
                 method: 'POST',
-                // Remove credentials: 'include'
                 headers: {
                     "Content-type": "application/json"
                 },
@@ -106,7 +101,6 @@ const useLogout = () => {
                 return
             }
 
-            // Clear user from localStorage and context
             localStorage.removeItem("user")
             setAuthUser(null)
 
