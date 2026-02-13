@@ -84,28 +84,38 @@ const useRegister = () => {
 
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    const { setAuthUser } = useAuthContext()
+    const { authUser, setAuthUser } = useAuthContext()
 
     const logout = async() => {
         setLoading(true)
         try {
+            const token = authUser?.token
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/logout`, {
                 method: 'POST',
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 },
             })
 
-            if (response.status !== 201) {
-                toast.error('Error logging out')
-                return
+            // Even if the server rejects/errs, we still clear local auth state so the UI logs out.
+            if (!response.ok) {
+                let message = 'Error logging out'
+                try {
+                    const data = await response.json()
+                    message = data?.message || message
+                } catch (_) {
+                    // ignore JSON parse errors
+                }
+                toast.error(message)
             }
 
-            localStorage.removeItem("user")
             setAuthUser(null)
 
         } catch (err) {
-            toast.error(err.message)
+            // Network / unexpected error: still log out locally.
+            toast.error(err?.message || 'Error logging out')
+            setAuthUser(null)
         } finally {
             setLoading(false)
         }
